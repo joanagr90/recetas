@@ -1,3 +1,20 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+
+recipes_list:
+    path: /recipes/
+    defaults: { _controller: MyRecipesBundle:Recipe:list }
+
+recipes_show:
+    path: /recipes/{recipe_name}
+    defaults: { _controller: MyRecipesBundle:Recipe:show }
+
+
+#Ejercicio 2.2
+recipes_show:
+    path: /recetas/{recipe_id}
+    defaults: {_controller: RecetasBundle:Recipe:show }
+    requirements:
+        recipe_id: \d+
