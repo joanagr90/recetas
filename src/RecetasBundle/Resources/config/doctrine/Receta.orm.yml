@@ -1,0 +1,50 @@
+#src/RecetasBundle/Resourcer/config/doctrine/Receta.orm.yml
+
+RecetasBundle\Entity\Receta:
+
+  type: entity
+  table: recetas
+  #una relación muchos a uno Recetas-Author
+  manyToOne:
+    author:
+      targetEntity: Author
+      #la carga Eager, para que se carguen todas las entidades relacionadas con author
+      fetch: EAGER
+      #La carga Lazy, el objeto author asociado a Recipe no será cargado hasta el momento en que sea necesario, por ejemplo, cuando se ejecute: recipe->getAuthor();
+      fetch: LAZY
+      joinColumn:
+        name: author_id
+        referencedColumnName: id
+        #para configurar el borrada en cascada a nivel de BBDD
+        onDelete: "CASCADE"
+      #Para asociar la operación en casca y guardar las entidades asociadas
+      cascade: ["persist"] 
+      inversedBy: recipes
+  #una relación muhcos a muchos Recetas-Ingredients
+  manyToMany:
+    ingredients:
+      targetEntity: Ingredient
+      joinTable:
+        name: recipe_ingredients
+        joinColumns:
+          recipe_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          ingredient_id:
+            referencedColumnName: id
+      cascade: ["persist"] 
+  id:
+    id:
+      type: integer
+      generator: { strategy: AUTO }
+  fields:
+    name:
+      type: string
+      length: 255
+    difficulty:
+      type: string
+      length: 40
+    description:
+      type: text
+
+       
