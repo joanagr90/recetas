@@ -159,7 +159,20 @@ class RecetasController extends Controller
     {
         $repository = $this->getDoctrine()->getRepository('RecetasBundle:Author');
         $chefs = $repository->findTopChefs();
-        return array('chefs' => $chefs);
+        return array('ultimas_recetas' => $this.getUltimasRecetaS(), 'chefs' => $chefs);
+
+    }
+
+    //TEMA 4
+    private function getUltimasRecetas()
+    {
+        $date = new \DateTime('-10 days');
+
+        $repository = $this->getDoctrine()->getRepository('RecetasBundle:Receta');
+        
+        $recetas = $repository->findPublishedAfter($date);
+    
+        return array('recetas' => $recetas);
     }
 
 }

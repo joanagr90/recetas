@@ -13,5 +13,104 @@
                 <li><a href="{{ item.href}}">{{item.caption}}</a></li>
             {% endfor %}
         </ul>
+
+        <!--tema 4-->
+        {% if receta.difficulty == 'fácil' %}           
+            <p>No tendrás problemas para cocinar esta receta.</p>       
+        {% elseif receta.difficulty == 'media' %}
+            <p>Esta receta requiere conocimientos avanzados de cocina.</p>
+        {% else %}
+            <p>¡Para dominar esta receta necesitas ser un Top Chef!</p>
+        {% endif %}
+
+        <!--Podremos recorrer arrays y colecciones con el tag for.-->
+        <h3> Recetas del autor</h3>
+        <ul>
+            {% for receta in author.recetas %}
+                <li class="receta">{{ receta.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <!--En los bucles se pueden recuperar el número de la iteración con loop.index y loop.index():-->
+        {% for receta in author.recetas %}
+            <li class="receta {% if loop.index0 is odd %}odd{% else %}even{% endif %}">{{ receta.name }}</li>
+        {% endfor %}
+
+        <!--Los Macros equivalen a funciones de un lenguaje de programación. Permite reusar componentes en varias plantillas.-->
+        {% macro lista_recetas(recetas) %}
+            <ul>
+            {% for receta in recetas %}
+                <li class="receta">{{ receta.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endmacro %}
+
+        <!--de este modo, el ejemplo de tag for podría ser reescrito:-->
+        {% import "receta_helpers.html" as helpers %}
+
+        <h3>Recetas del autor</h3>
+        {{ helpers.lista_recetas(author.recetas) }}
+
+        <!--para eliminar espacios en blanco: {%spaceless%}-->
+        {% spaceless %}
+            <div>
+                <p>aquí una línea de texto</p>
+            </div>
+        {% spaceless %}
+
+
+        <div><p>Aquí una línea de texto</p></div> 
+
+
+        <!--para que el texto se muestre tal cual, con código y todo-->
+        {% verbatim %}
+            <div>Esto se mostrará tal cual, con los tags HTML visibles.</div>
+        {% endverbatim %}
+
+        <!--filtros para que se convierta el texto a mayúsculas-->
+        <h3> {{ receta.name|upper }} </h3>
+        <h3> POLLO AL PIL-PIL </h3>
+
+        <!--funciones URL y PATH. La primera genera una url completa. La segunda, solo añade una URL relativa.-->
+
+        <a href="{{ url('recipes_show', { id: receta.id }) }}">Ver</a>
+        <a href="http://misrecetas.com/recetas/55">Ver</a>
+
+        <a href="{{ path('recipes_show', { id: receta.id }) }}">ver</a>
+        <a href="/recetas/55">Ver</a>
+
+
+        <!--extensiones por herencia en layout-->
+        {% block title %}{{ receta.name }}{% endblock %}
+
+        {% block body %}
+            <h1>{{ receta.name }}</h1>
+            <h2>Por {{ receta.author }}</h2>
+            <p>{{ receta.description }}</p>
+            <h3>Ingredientes</h3>
+            <ul>
+                {% for ingredient in receta.ingredients %}
+                    <li>
+                        {{ ingredient }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endblock %}
+
+        <!--añadir información a un bloque sin sobreescribir completamente su contenido-->
+        {% block mibloque %}
+            {{ parent() }}
+            <p>contenido a añadir</p>
+        {% endblock %}
+
+
+
+
+
+
+
+
+
+
     </body>
 </html>

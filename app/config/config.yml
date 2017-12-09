@@ -30,11 +30,19 @@ framework:
     assets: ~
     php_errors:
         log: true
+    #TEMA 4
+    #para evitar que no se vea una imagen cacheada en una vista anterior
+    templating: { engines: ['twig'], assets_version: v2 } 
 
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+
+    #tema 4
+    #definir mis propias variables globales
+    globals:
+        ga_tracking: "%ga_tracking%"
 
 # Doctrine Configuration
 #tema 3

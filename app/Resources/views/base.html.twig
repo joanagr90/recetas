@@ -3,11 +3,50 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+        <style>
+        h3{font-size: 14px;}
+        h1{font-weight: bold;}
+        </style>
+        {% endblock %}
+
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        
+        <!--para cargar y mostrar el contnido de la plantilla que está siendo incluída-->
+        {% include '::header.html.twig' %}
+    
     </head>
     <body>
         {% block body %}{% endblock %}
+
+        <!--para mostrar las ultimas recetas publicadas en un bloque inferior en todas las vistas de la aplicacion-->
+        <h3>Últimas recetas</h3>
+        <ul>
+            {% for receta in ultimas_recetas %}
+                <li>{{ receta.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <!--un controlador embebido para evitar uque la situación se vuelva inmanejable-->
+
+        {{ render(RecetasController('RecetasBundle:Default:UltimasRecetas')) }}
+
+        <p class="receta {{ receta|cssClass }}">
+            {{ receta.name }}
+        </p>
+        <ul>
+            {% for receta in recetas %}
+                <li class="receta { receta|cssClass }}"></li>
+            {% endfor %}
+        </ul>
+
         {% block javascripts %}{% endblock %}
+    
+    
+    
     </body>
+    <footer>
+    {% include '::contacto.html.twig' %}
+    {{contacto }}
+    </footer>
 </html>

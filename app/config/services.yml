@@ -38,3 +38,10 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+
+    #para registrar una extensión
+    RecetasBundle.twig.RecetasExtension:
+        class: RecetasBundle\Twig\RecetasExtension
+        tags:
+            - { name: twig.extension }
