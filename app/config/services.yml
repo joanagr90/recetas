@@ -45,3 +45,7 @@ services:
         class: RecetasBundle\Twig\RecetasExtension
         tags:
             - { name: twig.extension }
+
+    mis_recetas.ultimas_recetas:
+        class: RecetasBundle\Model\UltimasRecetas
+        arguments: ["@doctrine.orm.entity_manager"]

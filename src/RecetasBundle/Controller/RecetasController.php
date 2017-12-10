@@ -174,6 +174,8 @@ class RecetasController extends Controller
     }
 
     //TEMA 4
+    #Tema 6-Inyecciones
+    #crear servicios para que permita mostrar las últimas recetas
     private function getUltimasRecetas()
     {
         $date = new \DateTime('-10 days');
@@ -181,8 +183,8 @@ class RecetasController extends Controller
         $repository = $this->getDoctrine()->getRepository('RecetasBundle:Receta');
         
         $recetas = $repository->findPublishedAfter($date);
-    
-        return array('recetas' => $recetas);
+        #se modifica el controlador para permitir mostras las ultimas recetas con una inyeccion de dependencias
+        return array('recetas' => $this->get('mis_recetas.ultimas_recetas')->findFrom($date),);
     }
 
     #tema 5
@@ -205,6 +207,19 @@ class RecetasController extends Controller
             'receta' => $receta
         );
     }
+
+    #tema 6 -- Inyecciones
+    #se inyecta una dependencia directamente para realizar invocaciones estáticas o utilizar variables globales
+    function save_account($account_data, $save_callback)
+    {
+        $success = $save_callback('accounts', $account_data);
+        if (!$success)
+        {
+            $message = sprintf('Ha ocurrido un error guardando la cuenta para %s', $account_data['name']);
+            throw new Exception ($message);
+        }
+    }
+    
 
 }
 
@@ -319,5 +334,18 @@ class RecipeType extends AbstractType
             'data_class' => 'RecetasBundle\Entity\Receta',
             'cascade_validation' => true
         ));
+    }
+}
+
+class Account
+{
+    public function save(DatabaseInterface $db)
+    {
+        $success = $db->insertRow('accounts', $this->toArray());
+        if(!$success)
+        {
+            $message = sprintf('Ha ocurrido un error mientras se guardaba la cuenta para %s', $this->name);
+            throw new Exception($message);
+        }
     }
 }
