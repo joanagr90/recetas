@@ -1,0 +1,40 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}RecetasBundle:Author:create{% endblock %}
+
+{% block body %}
+    <h1>Bienvenido a la página Author:create</h1>
+
+    {{ form(form) }}
+
+<!--para renderizar un formulario-->
+    <!--<form id='author-create' action='' method='post'> :-->
+    {{ form_start(form, {'attr' : { 'id' : 'author-create'}}) }}
+    
+    {{ form_errors(form) }}
+    <ul>
+        <li>
+            {{ form_label(form.name) }}
+            {{ form_errors(form.name) }}
+            {{ form_widget(form.name) }}
+        </li>
+
+        <li>
+            {{ form_label(form.surname) }}
+            {{ form_errors(form.surname) }}
+            {{ form_widget(form.surname) }}
+        </li>
+
+        <li>
+            {{ form_widget(form.save) }}
+        </li>
+
+        <li>
+            <input type="submit" value="Add author" />
+        </li>
+    
+    </ul>
+    
+    {{ form_end(form) }}
+
+{% endblock %}

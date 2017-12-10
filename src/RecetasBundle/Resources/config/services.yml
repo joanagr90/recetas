@@ -1,0 +1,7 @@
+#src/RecetasBundle/config/services.yml
+
+services: 
+  mis_recetas.form.type.difficulty:
+    class: RecetasBundle\Controller\RecetasController
+    tags:
+      - { name: form.type, alias: difficulty }

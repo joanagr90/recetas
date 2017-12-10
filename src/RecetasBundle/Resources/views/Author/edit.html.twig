@@ -1,0 +1,11 @@
+{% extends "::base.html.twig" %}
+
+{% block title %} RecetasBundle:Receta:edit {% endblock %}
+
+{% block body %}
+
+    <h1>Bienvenido a Receta:edit {{ receta.name }}</h1>
+
+    {{ form(form) }}
+
+{% endblock %}

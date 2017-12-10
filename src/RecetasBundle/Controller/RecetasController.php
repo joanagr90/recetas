@@ -8,6 +8,17 @@ use Symfony\Component\HttpFoundation\Request;
 #tema 3
 use RecetasBundle\Entity\Receta;
 use Symfony\Component\HttpFoundation\Response;
+#tema 5
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use RecetasBundle\Entity\Author;
+#para controlar la protección CSRF, generar id único en cada formulario
+use Symfony\Component\OptionsResolver\OptionsResolver;
+#FieldTypes
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use RecetasBundle\Model\Difficulties;
+#EventSubscriber
+use RecetasBundle\Form\EventListener\AddNotesFieldSubscriber;
 
 class RecetasController extends Controller
 {
@@ -144,7 +155,6 @@ class RecetasController extends Controller
         $this->persistAndFlush($recipe);
 
         return $this->redirect($this->generateUrl('my_recipes_show', array('id' => $recipe->getID())));
-    
     }
 
     private function persistAndFlush(Recipe $recipe)
@@ -175,4 +185,139 @@ class RecetasController extends Controller
         return array('recetas' => $recetas);
     }
 
+    #tema 5
+    public function editAction(Receta $receta, Request $request)
+    {
+        $form = $this->createForm(RecipeType::class, $receta);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() and $form->isValid())
+        {
+            $this->getDoctrine()->getManager()->flush();
+            $this->redirectToRoute('mis_recetas_show', array(
+                'id' => $receta->getId()
+            ));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'receta' => $receta
+        );
+    }
+
+}
+
+  #tema 5
+class AuthorController extends Controller
+{
+    #se añade la lógica necesaria para que el submit funcione
+    public function createAction(Request $request)
+    {
+        $author = new Author();
+        $form = $this->CreateForm(AuthorType::class, $author);
+        
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $author = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($author);
+            $em->flush();
+
+            return $this->redirectToRoute('mis_recetas_author_show', array('id' => $author->getId()));
+        }
+        return $this->render('RecetasBundle:Author:create.html.twig', array('form => $form->createView()'));
+    }
+}
+
+class AuthorType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', TextType::class)
+            ->add('surname', TextType::class)        
+            #por defecto el metodo es POST, pero se puede modificar:
+            ->setMethod('PUT')
+            ->add('difficulty', ChoiceType::class, array(
+                'choices' => Difficulties::toArray())
+            );
+
+    }
+
+    public function setName()
+    {
+        return 'receta';
+    }
+    public function getName()
+    {
+        return 'author';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'RecetasBundle\Entity\Author',
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
+            'csrf_token_id' => 'author'
+        ));
+
+        $author = new Author('Iñaki', '');
+        $validator = $this->get('validator');
+        $errors = $validator->validate($author);
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'RecetasBundle\Entity\Author',
+        ));
+    }
+}
+
+class DifficultyType extends AbstractType
+{
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'choices' => Difficulties::toArray()
+        ));
+    }
+
+    public function getParent()
+    {
+        return ChoiceType::class;
+    }
+}
+
+class RecipeType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', TextType::class)
+            ->add('difficulty', DifficultyType::class)
+            ->add('author', AuthorType::class)
+            ->add('enviar', SubmitType::class);
+
+        $builder->addEventSubscriber(new AddNotesFieldSubscriber());
+    }
+
+    public function setName()
+    {
+        return 'receta';
+    }
+    #propagar la validación al formulario embebido
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        //configuración avanzada
+        $resolver->setDefaults(array(
+            'data_class' => 'RecetasBundle\Entity\Receta',
+            'cascade_validation' => true
+        ));
+    }
 }

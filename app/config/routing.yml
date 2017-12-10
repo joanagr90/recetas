@@ -18,3 +18,9 @@ recipes_show:
     defaults: {_controller: RecetasBundle:Recipe:show }
     requirements:
         recipe_id: \d+
+
+#TEMA-5
+#Nueva ruta al formulario
+mis_recetas_author_create:
+    pattern: /authors/create
+    defaults: { _controller: RecetasBundle:Author:create }

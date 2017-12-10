@@ -35,6 +35,16 @@ class Receta{
        $this->ingredients[] = $ingredient;
    }
 
+   public function getAuthor()
+   {
+       return $this->author;
+   }
+   public function setAuthor(Author $author)
+   {
+       $this->author = $author;
+       return $this;
+   }
+
    
 }
 

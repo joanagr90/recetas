@@ -1,0 +1,9 @@
+RecetasBundle\Entity\Author:
+  properties:
+    name:
+      - NotBlank: ~
+    surname:
+      - NotBlank: ~
+  getters:
+    valid:
+      - "True": { message: "No aceptamos recetas del autor" }
