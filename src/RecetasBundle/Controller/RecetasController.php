@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use RecetasBundle\Entity\Author;
-#para controlar la protección CSRF, generar id único en cada formulario
+#para controlar la protecciÃ³n CSRF, generar id Ãºnico en cada formulario
 use Symfony\Component\OptionsResolver\OptionsResolver;
 #FieldTypes
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -36,61 +36,61 @@ class RecetasController extends Controller
 
         #recuperar entidades
         $repository = $this->getDoctrine()->getRepository('RecetasBundle:Receta');
-        $recipe = $repository->find($id);
+        $receta = $repository->find($id);
         #recuperar el autor de una receta:
-        $author = $recipe->getAuthor();
+        $author = $receta->getAuthor();
 
         #el camino inverso:
         $repository = $this->getDoctrine()->getRepository('RecetasBundle:Author');
         $author = $repository->find($id);
-        $recipes = $author->getRecipes();
+        $receta = $author->getRecipes();
 
-        #para recuperar todos los elementos y todas las instancias de Recipe
+        #para recuperar todos los elementos y todas las instancias de Receta
         $repository->findAll();
 
-        #especificar algunos criterios de filtrado por dificultar y ordenación:
+        #especificar algunos criterios de filtrado por dificultar y ordenaciÃ³n:
         $repository->findBy(array('difficulty' => 'easy'));
         $repository->findBy(array(), array('name' => 'DESC'));
 
-        #metaprogramación para permitir algunos métodos más legibles:
+        #metaprogramaciÃ³n para permitir algunos mÃ©todos mÃ¡s legibles:
         $repository->findByDifficulty('easy'); 
         $repository->findOneByName('Pollo al pil-pil');
 
-        #actualizar entnidades. Se invoca al método flush()
-        $recipe = $repository->findOneByName('Pollo al pil-pil');
-        $recipe->setName('Pollo al chilindrón');
+        #actualizar entnidades. Se invoca al mÃ©todo flush()
+        $receta = $repository->findOneByName('Pollo al pil-pil');
+        $receta->setName('Pollo al chilindrÃ³n');
         $this->getDoctrine()->getManager()->flush();
 
-        #eliminar entididades. Se invoca al método remove()
-        $recipe = $repository->find($id);
+        #eliminar entididades. Se invoca al mÃ©todo remove()
+        $receta = $repository->find($id);
         $em = $this->getDoctrine()->getManager();
-        $em->remove($recipe);
+        $em->remove($receta);
         $em->flush();
         
 
-        //carga la colección completa la primera vez que sea accedida con la carga Lazy en una relación Author a Recipe
+        //carga la colecciÃ³n completa la primera vez que sea accedida con la carga Lazy en una relaciÃ³n Author a Receta
          $author->getRecipes();
 
-         //un acceso a DQL a través del método createQuery().
+         //un acceso a DQL a travÃ©s del mÃ©todo createQuery().
          $em = $this->getDoctrine()->getManager();
          $query = $em->createQuery(
              'SELECT a
              FROM RecetasBundle:Author a
-             JOIN a.recipes r
+             JOIN a.recetas r
              WHERE r.difficulty = :difficulty
              ORDER BY a.surname DESC'
-         )->setParameter('difficulty', 'difícil');
+         )->setParameter('difficulty', 'difÃ­cil');
 
          $hardcore_authors = $query->getResult();
 
-         //Realizar consulta a través del QueryBuilder
+         //Realizar consulta a travÃ©s del QueryBuilder
          $em = $this->getDoctrine()->getManager();
          $repository = $em->getRepository('RecetasBundle:author');
          $query = $repository->createQueryBuilder('a')
-                ->innerJoin('a.recipes', 'r')
+                ->innerJoin('a.recetas', 'r')
                 ->where('r.difficulty = :difficulty')
                 ->orderBy('a.surname', 'DESC')
-                ->setParameter('difficulty', 'difícil')
+                ->setParameter('difficulty', 'difÃ­cil')
                 ->getQuery();
         $hardcore_authors = $query->getResult();
 
@@ -111,7 +111,7 @@ class RecetasController extends Controller
         )->getQuery();
         $last_id = $query->getSingleScalarResult();
 
-        //Optimización básica de las consultas facilitando la información al hydrator, que se encarga de construir los objectos cargados
+        //OptimizaciÃ³n bÃ¡sica de las consultas facilitando la informaciÃ³n al hydrator, que se encarga de construir los objectos cargados
         $query = $em->createQuery(
             'SELECT r, a, i
             FROM RecetasBundle:Receta r
@@ -132,39 +132,57 @@ class RecetasController extends Controller
 
     public function createAction()
     {
-        $recipe = new Recipe();
-        $recipe->setname('Pollo al pil-pil');
-        $recipe->setdifficulty('fácil');
-        $recipe->setdescription('Una receta de pollo');
+        $receta = new Receta();
+        $receta->setname('Pollo al pil-pil');
+        $receta->setdifficulty('fÃ¡cil');
+        $receta->setdescription('Una receta de pollo');
 
         $em = $this->getDoctrine->getManager();
-        $em = persist($recipe);
+        $em = persist($receta);
         $em = flush();
 
-        return new Response('Creada receta con id: ' . $recipe->getId());
-    
-        
+        return new Response('Creada receta con id: ' . $receta->getId());
+      
         #para crear una receta completa:
         $em = $this->getDoctrine()->getEntityManager();
 
-        $author = new Author('Karlos', 'Arguiñano');
+        $author = new Author('Karlos', 'ArguiÃ±ano');
         $ingredient = new Ingredient('Pollo');
-        $recipe = new Recipe($author, 'Pollo al pil-pil', 'Deliciosa y económica receta.', 'fácil');
-        $recipe->add($ingredient);
+        $receta = new Receta($author, 'Pollo al pil-pil', 'Deliciosa y econÃ³mica receta.', 'fÃ¡cil');
+        $receta->add($ingredient);
         
-        $this->persistAndFlush($recipe);
+        $this->persistAndFlush($receta);
 
-        return $this->redirect($this->generateUrl('my_recipes_show', array('id' => $recipe->getID())));
+        return $this->redirect($this->generateUrl('mis_recetas_show', array('id' => $receta->getID())));
+
+        //tema 7- Eventos
+        //Creación nueva receta
+        $receta = new Receta();
+        $form = $this->createForm(new RecipeType, $receta);
+        $form->handleRequest($request);
+
+        if($form->isValid())
+        {
+            $this->persistAndFlush($receta);
+            return $this->redirect($this->generateUrl('mis_recetas_show', array('id' => $receta->getID())));
+
+            /*El controlador es el encargado de disparar el evento, ya que tiene acceso al contenedor de inyección
+            de dependencias y que en el contenedor esta registrado el propio dispatcher.*/
+            $this->get('event_dispatcher')->dispatch('receta.create', new eventoReceta($receta));
+            return $this->redirect($this->generateUrl('mis_recetas_recipe_show', array('id' => $receta->getId())));
+        }
+
+        return array('form' => $form->createView());
     }
 
-    private function persistAndFlush(Recipe $recipe)
+    private function persistAndFlush(Receta $receta)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($recipe);
+        $em->persist($receta);
         $em->flush();
     }
 
-    //Nuevo método implementado para que Doctrine sepa que se usa mi repositorio
+    //Nuevo mÃ©todo implementado para que Doctrine sepa que se usa mi repositorio
     public function topChefsAction()
     {
         $repository = $this->getDoctrine()->getRepository('RecetasBundle:Author');
@@ -175,7 +193,7 @@ class RecetasController extends Controller
 
     //TEMA 4
     #Tema 6-Inyecciones
-    #crear servicios para que permita mostrar las últimas recetas
+    #crear servicios para que permita mostrar las Ãºltimas recetas
     private function getUltimasRecetas()
     {
         $date = new \DateTime('-10 days');
@@ -209,7 +227,7 @@ class RecetasController extends Controller
     }
 
     #tema 6 -- Inyecciones
-    #se inyecta una dependencia directamente para realizar invocaciones estáticas o utilizar variables globales
+    #se inyecta una dependencia directamente para realizar invocaciones estÃ¡ticas o utilizar variables globales
     function save_account($account_data, $save_callback)
     {
         $success = $save_callback('accounts', $account_data);
@@ -226,7 +244,7 @@ class RecetasController extends Controller
   #tema 5
 class AuthorController extends Controller
 {
-    #se añade la lógica necesaria para que el submit funcione
+    #se aÃ±ade la lÃ³gica necesaria para que el submit funcione
     public function createAction(Request $request)
     {
         $author = new Author();
@@ -281,7 +299,7 @@ class AuthorType extends AbstractType
             'csrf_token_id' => 'author'
         ));
 
-        $author = new Author('Iñaki', '');
+        $author = new Author('IÃ±aki', '');
         $validator = $this->get('validator');
         $errors = $validator->validate($author);
     }
@@ -326,10 +344,10 @@ class RecipeType extends AbstractType
     {
         return 'receta';
     }
-    #propagar la validación al formulario embebido
+    #propagar la validaciÃ³n al formulario embebido
     public function configureOptions(OptionsResolver $resolver)
     {
-        //configuración avanzada
+        //configuraciÃ³n avanzada
         $resolver->setDefaults(array(
             'data_class' => 'RecetasBundle\Entity\Receta',
             'cascade_validation' => true

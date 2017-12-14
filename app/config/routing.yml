@@ -2,25 +2,34 @@ app:
     resource: '@AppBundle/Controller/'
     type: annotation
 
+recetas_list:
+    path: /recetas/
+    defaults: { _controller: RecetasBundle:Receta:list }
 
-recipes_list:
-    path: /recipes/
-    defaults: { _controller: MyRecipesBundle:Recipe:list }
-
-recipes_show:
-    path: /recipes/{recipe_name}
-    defaults: { _controller: MyRecipesBundle:Recipe:show }
-
+recetas_show:
+    path: /recetas/{receta_name}
+    defaults: { _controller: RecetasBundle:Receta:show }
 
 #Ejercicio 2.2
-recipes_show:
-    path: /recetas/{recipe_id}
-    defaults: {_controller: RecetasBundle:Recipe:show }
+recetas_show:
+    path: /recetas/{receta_id}
+    defaults: {_controller: RecetasBundle:Receta:show }
     requirements:
-        recipe_id: \d+
+        receta_id: \d+
 
 #TEMA-5
 #Nueva ruta al formulario
 mis_recetas_author_create:
     pattern: /authors/create
     defaults: { _controller: RecetasBundle:Author:create }
+
+#TEMA-8
+#Autenticación formularios. El nombre de la ruta login tienen que coincidir con los valores de security.yml
+login:
+    path: /login
+    defaults: { _controller: RecetasBundle:Security:login }
+
+#Es necesario añadir una ruta de salida para el logout
+logout:
+    path: /logout
+

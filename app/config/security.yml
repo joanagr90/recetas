@@ -3,16 +3,53 @@
 security:
 
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+     #tema 8
     providers:
         in_memory:
-            memory: ~
-
+            memory: 
+                users:
+                    #definición de dos usuarios. Con esta configuración se tiene definida una zona segura.
+                    #Al acceder en el navegador, se solicita una autenticación.
+                    user: { password: user, roles: 'ROLE_USER' }
+                    admin: { password: admin, roles: 'ROLE_ADMIN' }
+        #se define el user-provider para que acceda a la base de datos durante la autenticación:
+        user_provider:
+            entity:
+                class: UserBundle:User
+                property: email
+   #Se define la clase a utilizar para los usuarios y la forma en que se codifica su pass. En este caso, al ser
+   #plaintext, no hay ninguna codificación.
+    encoders:
+        #Synfony\Component\Security\Core\User\User: plaintext
+        #Este encoder tiene el propósito de poder generar una contraseña para admin con el mismo algoritmo con
+        #el que se ha configurado el otro encoder
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+        UserBundle\Entity\User:
+            algorithm: bcrypt
+   
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        #Autenticación formularios
+        default:
+            anonymous: ~
+            pattern: ^/
+            #http_basic: ~
+            #para que el provider sea user:
+            provider: user_provider
+            form_login:
+                #se encarga del renderizado del formulario
+                login_path: login
+                #se encarga de la validación del mismo
+                check_path: login
+            #Se añade un logout para los usuarios del sistema
+            logout:
+                path: /logout
+                target: /
         main:
             anonymous: ~
             # activate different ways to authenticate
@@ -22,3 +59,28 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+
+
+        #TEMA- 8 -- Seguridad
+        #Autenticación-Firewall
+        #Cualquier petición de toda la web será gestionada por el firewall.
+        #La más básica y  típica es la del protocolo HTTP (usuario/contraseña):
+        secured_area:
+            pattern: ^/
+            aninymous: ~
+            http_basic:
+                realm: "Mis recetas"
+
+    #Control de acceso-autorización.        
+    access_control: 
+        - { path: ^/secured, roles: ROLE_ADMIN }
+        #TEMA - 8
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/authors, roles: ROLE_USER }
+    
+    #Configuración user provider para que el componente de seguridad acceda a la base de datos durante la
+    #autenticación de los usuarios
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+

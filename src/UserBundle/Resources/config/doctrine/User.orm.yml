@@ -1,0 +1,30 @@
+#  src\UserBundle\Resources\config\doctrine\User.orm.yml
+
+UserBundle\Entity\User:
+  type: entity
+  table: null
+  repositoryClass: UserBundle\Repository\UserRepository
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    email:
+      type: string
+      length: 255
+      #para que el email sea único
+      unique: true
+    username:
+      type: string
+      length: 255
+    password:
+      type: string
+      length: '64'
+    #para permitir una gestión de roles más potente
+    roles:
+      type: string
+      length: 255
+      
+  lifecycleCallbacks: { }

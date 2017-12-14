@@ -1,6 +1,6 @@
 <?php
 
-namespace RecipesBundle\Model;
+namespace RecetasBundle\Model;
 
 class Difficulties
 {

@@ -9,7 +9,7 @@ class AuthorRepository extends EntityRepository{
         return $this->getEntityManager()
         ->createQuery('SELECT a
                        FROM RecetasBundle:Author a
-                       JOIN a.recipes r
+                       JOIN a.recetas r
                        WHERE r.difficulty = :difficulty')
         ->setParameter('difficulty', 'difícil')
         ->getResult();

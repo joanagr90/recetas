@@ -14,12 +14,12 @@ class Author
     {
         $this->name = $name;
         $this->surname = $surname;
-        $this->recipes = new ArrayCollection;
+        $this->recetas = new ArrayCollection;
     }
     #para que author contenga una referencia a sus recetas
     public function getRecipes()
     {
-        return $this->recipes;
+        return $this->recetas;
     }
 }
 

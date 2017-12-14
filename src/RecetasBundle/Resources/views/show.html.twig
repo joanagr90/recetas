@@ -73,10 +73,10 @@
 
         <!--funciones URL y PATH. La primera genera una url completa. La segunda, solo añade una URL relativa.-->
 
-        <a href="{{ url('recipes_show', { id: receta.id }) }}">Ver</a>
+        <a href="{{ url('recetas_show', { id: receta.id }) }}">Ver</a>
         <a href="http://misrecetas.com/recetas/55">Ver</a>
 
-        <a href="{{ path('recipes_show', { id: receta.id }) }}">ver</a>
+        <a href="{{ path('recetas_show', { id: receta.id }) }}">ver</a>
         <a href="/recetas/55">Ver</a>
 
 

@@ -10,7 +10,7 @@ RecetasBundle\Entity\Receta:
       targetEntity: Author
       #la carga Eager, para que se carguen todas las entidades relacionadas con author
       fetch: EAGER
-      #La carga Lazy, el objeto author asociado a Recipe no será cargado hasta el momento en que sea necesario, por ejemplo, cuando se ejecute: recipe->getAuthor();
+      #La carga Lazy, el objeto author asociado a Receta no será cargado hasta el momento en que sea necesario, por ejemplo, cuando se ejecute: receta->getAuthor();
       fetch: LAZY
       joinColumn:
         name: author_id
@@ -19,15 +19,15 @@ RecetasBundle\Entity\Receta:
         onDelete: "CASCADE"
       #Para asociar la operación en casca y guardar las entidades asociadas
       cascade: ["persist"] 
-      inversedBy: recipes
+      inversedBy: recetas
   #una relación muhcos a muchos Recetas-Ingredients
   manyToMany:
     ingredients:
       targetEntity: Ingredient
       joinTable:
-        name: recipe_ingredients
+        name: receta_ingredients
         joinColumns:
-          recipe_id:
+          receta_id:
             referencedColumnName: id
         inverseJoinColumns:
           ingredient_id:

@@ -30,8 +30,8 @@ services:
         tags: ['controller.service_arguments']
     
     RecetasBundle\Controller\:
-        resource: '../../src/RecetasBuundle/Controller'
-        public: ture
+        resource: '../../src/RecetasBundle/Controller'
+        public: true
         tags: ['controller.service_arguments']
 
     # add more services, or override services that need manual wiring
@@ -49,3 +49,12 @@ services:
     mis_recetas.ultimas_recetas:
         class: RecetasBundle\Model\UltimasRecetas
         arguments: ["@doctrine.orm.entity_manager"]
+
+    #TEMA - 7
+    #Lanzar eventos en aplicación Symfony para registrar un listener.
+
+    mis_recetas.recetas_listener:
+        class: RecetasBundle\Event\listener
+        arguments: ["@mailer"]
+        tags:
+            - { name: kernel.event_listener, event: receta.create, method: onRecetaCreada }
