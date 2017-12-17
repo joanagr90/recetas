@@ -1,0 +1,25 @@
+<!--/Resources/translations/messages.fr.xliff -->
+
+<?xml version = "1.0" ?>
+<xliff version = "1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>Pollo al pil-pil</source>
+                <target>Poulet sauce pil-pil</target>
+                <!--mensajes con variables -->
+                <!--un proceso de dos pasos:
+                1- Abstraer le mensaje a traducir procesandolo con el servicio translate
+                2- Crear una traducción del mensaje para cada idioma soportado por la aplicación-->
+                <source>Hello %name%</source>
+                <target>Bonjour %name%</target>
+            </trans-unit>
+            <!--catalogos de mensajes-->
+            <!--Un identificar único para cada texto-->
+            <trans-unit id="2">
+                <source>pollo.pil-pil</source>
+                <target>poulet sauce pil-pil</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

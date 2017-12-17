@@ -6,8 +6,11 @@ namespace RecetasBundle\Entity;
 class Author
 {
     private $id;
-    protected $name;
+    //protected $name;
     protected $surname;
+
+    #tema 9 - Traducionedo mensajes de validación
+    public $name;
 
     #constructores para una configuración más amplia y añadir métodos para añadir ingredientes
     public function __construct($name, $surname)

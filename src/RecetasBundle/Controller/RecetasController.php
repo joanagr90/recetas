@@ -20,8 +20,48 @@ use RecetasBundle\Model\Difficulties;
 #EventSubscriber
 use RecetasBundle\Form\EventListener\AddNotesFieldSubscriber;
 
+
 class RecetasController extends Controller
 {
+
+    #tema 9 - translation
+    public function indexAction()
+    {   //Traducciones
+        $translated = $this->get('translator')->trans('Pollo al chilindrón');
+        return new Response($translated);
+
+        //Mensajes con variables
+        $translated = $this->get('translator')->trans(
+            'Hello %name%',
+            array('%name%' => $name)
+        );
+        return new Response($translated);
+
+        //Configuración regional del usuario.
+        $request->setLocale('en_US');
+
+        //para traducir mensajes pluralizados
+        $translated = $this->get('translator')->transChoice(
+            'Hay un ingrediente | Hay %count% ingredientes',
+            10, //es el número de objetos al que se refiere la frase
+            array('%count%' => 10)
+        );
+
+        //selección del idioma de la traducción
+        $this->get('translator')->trans(
+            'Pollo al pil-pil',
+            array(),
+            'messages',
+            'fr_FR'
+        );
+        $this->get('translator')->transChoice(
+            '{0} No hay ingredientes |{1} Hay un ingrediente | [1, Inf] Hay %count% ingredientes',
+            10,
+            array('%count%' => 10),
+            'messages',
+            'fr_FR'
+        );
+    }
 
     public function showAction($id)
     {

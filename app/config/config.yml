@@ -35,6 +35,17 @@ framework:
     #para evitar que no se vea una imagen cacheada en una vista anterior
     templating: { engines: ['twig'], assets_version: v2 } 
 
+    #tema 9 - translation
+    translator: { fallback: en }
+    #Configuración regional por defecto:
+    default_locale: en
+#traducción de rutas y contenido:
+contact:
+    path: /{_locale}/recetas
+    defaults: {_controller: RecetasBundlel:Contact:index, _locale: en }
+    requirements:
+        _locale: en|fr|de
+
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'

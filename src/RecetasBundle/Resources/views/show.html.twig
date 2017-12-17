@@ -104,6 +104,30 @@
         {% endblock %}
 
 
+        <!-- Tema 9 - Traducciones en plantillas -->
+        {% trans %} Hello %name% {% endtrans %}
+        {% transchoice count %} <!--obtiene automáticamente la variable %count% a partir del contexto actual y la pasa al tradcutor-->
+         {0} No hay ingredientes |{1} Hay un ingrediente | [1, Inf] Hay %count% ingredientes
+        {% endtranschoice %}
+
+        <!--para utilizar el caracter porcentaje en una cadena-->
+        {% trans %}porcentaje: %percent%%% {% endtrans %}
+
+        <!--Se puede especificar el dominio del mensaje y pasar variables adicionales-->
+        {% trans with {'%name%': 'Pollo al pil-pil'} from "app" %} Receta: %name% {% endtrans %}
+        
+        {% trans with {'%name%': 'Pollo al pil-pil'} from "app" into "fr" %} Receta: %name% {% endtrans %}
+
+        {% transchoice count with {'%name%': 'Joana'} from "app" %}
+            {0} No hay ingredientes |{1} Hay un ingrediente | [1, Inf] Hay %count% ingredientes
+        {% endtranschoice %}
+
+        <!-- los filtros trans y transchoice se pueden utilizar para traducir texto dinámico en expresiones complejas-->
+        {{ message |trans }}
+        {{ message | transchoice(5) }}
+        {{ message | trans({'%name%': 'Pollo al pil-pil'}, "app") }}
+        {{ message | transchoice(5, {'%name%': 'Pollo al pil-pil'} 'app') }}
+         
 
 
 
