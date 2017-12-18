@@ -12,5 +12,7 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
+#TEMA 10 - Configuración tests
+#PAra que en el entorno test no se envíen realmente los emails.
 swiftmailer:
     disable_delivery: true
